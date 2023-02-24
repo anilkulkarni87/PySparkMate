@@ -2,23 +2,31 @@
 
 """Tests for `PySparkMate` package."""
 
-import pytest
+from pyspark.sql import SparkSession
+
+from PySparkMate import PySparkMate 
 
 
-from PySparkMate import PySparkMate
+def test_remove_nulls(spark):
+    """Test that remove_nulls works fine"""
+    accountsDf = spark.createDataFrame(
+        data=[
+            ("123456789", None),
+            ("222222222", "202"),
+            ("000000000", "302"),
+        ],
+        schema=["account_number", "business_line_id"],
+    )
+    resultDF = PySparkMate.remove_nulls(accountsDf, "business_line_id")
+    assert resultDF.count() == 2
 
-
-@pytest.fixture
-def response():
-    """Sample pytest fixture.
-
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
-
-
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
+def test_rename_columns(spark):
+    """Test for verifying that the column is renamed"""
+    customerDF = spark.createDataFrame(
+        data=[
+        ("Henry","Jacob")
+        ],
+        schema = ["first_name","lastname"],
+    )
+    resultDF = PySparkMate.rename_columns(customerDF, "lastname", "last_name")
+    assert "last_name:" in resultDF.schema.simpleString()

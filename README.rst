@@ -1,5 +1,5 @@
 ==========
-sparkworks
+SparkWorks
 ==========
 
 
@@ -20,7 +20,7 @@ sparkworks
 
 
 
-paThis package is a helpful companion for working with PySpark, providing useful tools and resources
+This package is a helpful companion for working with PySpark, providing useful tools and resources
 
 
 * Free software: MIT license
