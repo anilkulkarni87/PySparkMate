@@ -1,0 +1,24 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/python:3.9
+      - image: circleci/python:3.8
+      - image: circleci/python:3.7
+      - image: circleci/python:3.6
+    steps:
+      - checkout
+      - run: pip install -U tox-travis
+      - run: tox
+      - deploy:
+          name: Deploy to PyPI
+          command: |
+            if [ "${CIRCLE_TAG}" ]; then
+              pip install twine
+              twine upload dist/* -u akarni -p $PYPI_PASSWORD
+            fi
+          env:
+            PYPI_PASSWORD:
+              secure: PLEASE_REPLACE_ME
+          when: on_success
